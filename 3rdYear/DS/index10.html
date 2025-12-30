@@ -9,125 +9,442 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background-color: #eef2f7; margin: 0; padding: 0; }
-    header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
-    .container { max-width: 1100px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-    h2 { margin-top: 0; color: #2c3e50; }
-    .hidden { display: none; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-    th { background-color: #34495e; color: white; position: relative; }
-    tr:nth-child(even) { background-color: #f8f9fb; }
-    tr:hover { background-color: #f1f5f9; }
-    button { margin: 10px 5px; padding: 10px 18px; border: none; border-radius: 4px; background-color: #3498db; color: white; cursor: pointer; }
-    button:hover { background-color: #2980b9; }
-    .danger-btn { background-color: #e74c3c; }
-    .danger-btn:hover { background-color: #c0392b; }
-    select, input[type="text"], input[type="password"], input[type="date"], input[type="number"] { padding: 10px; margin: 5px 0; border: 1px solid #ccc; border-radius: 4px; }
-    input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
-    .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-    .muted { color:#6b7280; font-size: 0.95rem; }
-    .notice { background:#fff3cd; color:#856404; border:1px solid #ffeeba; padding:10px; border-radius:6px; margin:10px 0; }
-    .success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; padding:10px; border-radius:6px; margin:10px 0; }
-    .error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; padding:10px; border-radius:6px; margin:10px 0; }
-    small { display:block; color:#6b7280 }
-    #qr-box { display:flex; gap:16px; align-items:flex-start; }
-    #qrcode { padding:8px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; }
-    code.kbd { background:#111827; color:#f9fafb; padding:2px 6px; border-radius:4px; }
-    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #eef2f7;
+      margin: 0;
+      padding: 0;
+      color: #2c3e50;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgb(0 0 0 / 0.2);
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 40px auto 60px;
+      background: white;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgb(0 0 0 / 0.1);
+    }
+    h2 {
+      margin-top: 0;
+      color: #2c3e50;
+      font-weight: 700;
+      font-size: 1.75rem;
+      margin-bottom: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 25px;
+      font-size: 0.95rem;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px 14px;
+      text-align: center;
+      vertical-align: middle;
+    }
+    th {
+      background-color: #34495e;
+      color: white;
+      position: relative;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      user-select: none;
+    }
+    tr:nth-child(even) {
+      background-color: #f8f9fb;
+    }
+    tr:hover {
+      background-color: #f1f5f9;
+      transition: background-color 0.25s ease;
+    }
+    button {
+      margin: 10px 6px 10px 0;
+      padding: 11px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 3px 6px rgb(52 152 219 / 0.4);
+      user-select: none;
+    }
+    button:hover {
+      background-color: #2980b9;
+      box-shadow: 0 4px 10px rgb(41 128 185 / 0.6);
+    }
+    button:active {
+      background-color: #1f5c87;
+      box-shadow: none;
+    }
+    .danger-btn {
+      background-color: #e74c3c;
+      box-shadow: 0 3px 6px rgb(231 76 60 / 0.4);
+    }
+    .danger-btn:hover {
+      background-color: #c0392b;
+      box-shadow: 0 4px 10px rgb(192 57 43 / 0.6);
+    }
+    .danger-btn:active {
+      background-color: #922b21;
+      box-shadow: none;
+    }
+    select, input[type="text"], input[type="password"], input[type="date"], input[type="number"] {
+      padding: 11px 14px;
+      margin: 6px 0;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.25s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    select:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="date"]:focus, input[type="number"]:focus {
+      border-color: #3498db;
+      outline: none;
+      box-shadow: 0 0 6px rgb(52 152 219 / 0.5);
+    }
+    input[type="checkbox"] {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .row label {
+      flex: 1 1 280px;
+      display: flex;
+      flex-direction: column;
+      font-weight: 600;
+      color: #34495e;
+      user-select: none;
+    }
+    .muted {
+      color: #6b7280;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+    .notice {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeeba;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+    small {
+      display: block;
+      color: #6b7280;
+      margin-top: 4px;
+      user-select: none;
+    }
+    #qr-box {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      margin-top: 20px;
+    }
+    #qrcode {
+      padding: 12px;
+      background: #fff;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      box-shadow: 0 3px 6px rgb(0 0 0 / 0.08);
+    }
+    code.kbd {
+      background: #111827;
+      color: #f9fafb;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      user-select: none;
+    }
     /* Auto-update indicators */
-    .auto-update-indicator { 
-      position: fixed; 
-      top: 20px; 
-      right: 20px; 
-      z-index: 1000; 
-      padding: 8px 16px; 
-      border-radius: 20px; 
-      font-size: 0.85rem;
-      font-weight: 500;
+    .auto-update-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      padding: 10px 22px;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+      user-select: none;
     }
-    .auto-update-indicator.connected { 
-      background: #d4edda; 
-      color: #155724; 
-      border: 1px solid #c3e6cb; 
+    .auto-update-indicator.connected {
+      background: #d4edda;
+      color: #155724;
+      border: 1.5px solid #c3e6cb;
     }
-    .auto-update-indicator.updating { 
-      background: #fff3cd; 
-      color: #856404; 
-      border: 1px solid #ffeeba; 
+    .auto-update-indicator.updating {
+      background: #fff3cd;
+      color: #856404;
+      border: 1.5px solid #ffeeba;
     }
-    .auto-update-indicator.error { 
-      background: #f8d7da; 
-      color: #721c24; 
-      border: 1px solid #f5c6cb; 
+    .auto-update-indicator.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1.5px solid #f5c6cb;
     }
-    
     .pulse-animation {
       animation: pulse 0.5s ease-in-out;
     }
-    
     @keyframes pulse {
       0% { transform: scale(1); }
-      50% { transform: scale(1.02); }
+      50% { transform: scale(1.03); }
       100% { transform: scale(1); }
     }
-    
     .updated-cell {
       background-color: #d4edda !important;
       transition: background-color 2s ease-out;
     }
-    
     .last-updated {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: #6b7280;
-      margin-top: 10px;
+      margin-top: 18px;
+      text-align: right;
+      user-select: none;
     }
-
     /* Select All button styling */
-   .select-all-btn {
-  background: #3498db;      /* Modern blue */
-  color: white;
-  border: none;
-  border-radius: 6px;
-  /* padding: 3px 8px; */
-  margin-left: 5px;
-  font-size: 12px;
-  cursor: pointer;
-  transition:  0.2s ease;
-}
-
-.select-all-btn:hover {
-  background: #2980b9;      /* Darker blue on hover */
-}
-
-.select-all-btn:active {
-  background: #1f5c87;      /* Even darker when clicked */
-}
-
-.subject-header {
-  white-space: nowrap;
-}
-
-    
+    .select-all-btn {
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 6px 14px;
+      margin-left: 6px;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      box-shadow: 0 2px 5px rgb(52 152 219 / 0.5);
+    }
+    .select-all-btn:hover {
+      background: #2980b9;
+      box-shadow: 0 3px 8px rgb(41 128 185 / 0.7);
+    }
+    .select-all-btn:active {
+      background: #1f5c87;
+      box-shadow: none;
+    }
     .select-all-btn.deselect {
       background-color: #e67e22;
+      box-shadow: 0 2px 5px rgb(230 126 34 / 0.5);
     }
-    
     .select-all-btn.deselect:hover {
       background-color: #d35400;
+      box-shadow: 0 3px 8px rgb(211 84 0 / 0.7);
     }
-
     /* Add extra space for select all buttons */
     .table-container {
       position: relative;
-      padding-bottom: 45px;
+      padding-bottom: 50px;
+      overflow-x: auto;
     }
-
     /* Style for subject headers */
     .subject-header {
       position: relative;
-      padding-bottom: 40px;
+      padding-bottom: 45px;
+      white-space: nowrap;
     }
+    #subject-select {
+      min-width: 180px;
+      min-height: 44px;
+      padding: 10px 14px;
+      line-height: 1.3;
+      font-size: 1rem;
+    }
+    #viewer-subject-block {
+      display: none; /* hidden by default */
+      min-width: 180px;
+    }
+    /* Group teacher buttons horizontally with spacing */
+    #teacher-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    /* Media Queries for Responsive Design */
+    @media (max-width: 1024px) {
+      .container {
+        margin: 30px 20px 50px;
+        padding: 25px 30px;
+      }
+      header {
+        padding: 15px 25px;
+      }
+      header h1 {
+        font-size: 1.6rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      button {
+        padding: 10px 18px;
+        font-size: 0.95rem;
+      }
+      select, input[type="text"], input[type="password"], input[type="date"], input[type="number"] {
+        font-size: 0.95rem;
+      }
+      #subject-select, #viewer-subject-select {
+        min-width: 140px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px 15px 40px;
+        padding: 20px 25px;
+      }
+      header {
+        padding: 12px 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+      }
+      header h1 {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        width: 100%;
+      }
+      .row {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+      }
+      .row label {
+        flex: none;
+        width: 100%;
+      }
+      button {
+        width: 100%;
+        padding: 12px 0;
+        font-size: 1rem;
+        margin: 8px 0;
+      }
+      #teacher-buttons {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .table-container {
+        padding-bottom: 60px;
+      }
+      #qr-box {
+        flex-direction: column;
+        align-items: center;
+      }
+      #qrcode {
+        margin-bottom: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        font-size: 14px;
+      }
+      header h1 {
+        font-size: 1.2rem;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      button {
+        font-size: 0.9rem;
+        padding: 10px 0;
+      }
+      select, input[type="text"], input[type="password"], input[type="date"], input[type="number"] {
+        font-size: 0.9rem;
+      }
+      .row label {
+        font-weight: 600;
+      }
+      #subject-select, #viewer-subject-select {
+        min-width: 100%;
+      }
+    }
+    .row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#subject-select {
+  min-width: 180px;
+  min-height: 40px;
+  padding: 8px 10px;
+  line-height: 1.2;
+}
+#viewer-subject-block {
+  display: none; /* hidden by default */
+}
+select:disabled {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+
   </style>
 </head>
 <body>
@@ -181,6 +498,11 @@
     <div class="row">
       
       <label>Saved Records: <select required id="saved-dates"></select></label>
+      <label id="viewer-subject-block">
+  Subject:
+  <select id="viewer-subject-select"></select>
+</label>
+
       <button id="logout-btn" class="danger-btn">Logout</button>
       <button onclick="window.location.href='private.html'" 
           style="padding:10px 18px; border:none; border-radius:8px; background-color:#3498db; color:white; cursor:pointer; font-weight:600; font-size:1rem;">
@@ -212,7 +534,7 @@
           style="padding:10px 18px; border:none; border-radius:8px; background-color:#3498db; color:white; cursor:pointer; font-weight:600; font-size:1rem;">  Student Attendance Overview
 </button>
 
-  <button onclick="window.location.href='sem.html'" 
+ <button onclick="window.location.href='sem.html'" 
           style="padding:10px 18px; border:none; border-radius:8px; background-color:#3498db; color:white; cursor:pointer; font-weight:600; font-size:1rem;">
     Classes taken in the Semester
   </button>
@@ -220,6 +542,9 @@
           style="padding:10px 18px; border:none; border-radius:8px; background-color:#3498db; color:white; cursor:pointer; font-weight:600; font-size:1rem;">
     Check Absent Students
   </button>
+  <button onclick="window.location.href='chatbot.html'">
+  🤖 Attendance Chatbot
+</button>
         <!-- <label>Radius (m): <input id="radius-input" type="number" min="5" max="200" step="1" value="35" /></label>
         <label>Expires in (min): <input id="expire-mins" type="number" min="1" max="15" step="1" value="3" /></label> -->
         <!-- <button id="set-class-here">Use my current location</button>
@@ -227,9 +552,14 @@
         <button id="end-qr-btn" class="danger-btn" style="display:none;">End Session</button> -->
       </div>
       <div id="add-class-section" class="row">
-  <input type="text" id="new-class-name" placeholder="Enter new class/subject">
-  <button id="add-class-btn">Add Class</button>
-  <button id="remove-class-btn" class="danger-btn">Remove Selected Subject</button>
+  <label>
+  Add Subject:
+  <select id="add-subject-select"></select>
+</label>
+
+<button id="add-subject-btn">Add Selected Subject</button>
+<button id="remove-class-btn" class="danger-btn">Remove Selected Subject</button>
+
 
       <div id="teacher-buttons" class="row">
       <button id="save-btn">Save Attendance</button>
@@ -325,68 +655,70 @@ const firebaseConfig = {
   /*************************************
    * Data
    *************************************/
-   const students = [
-    "R23XV1M6701 - Addanki Harshitha",
-    "R23XV1M6702 - Agalduvity Rohit",
-    "R23XV1M6703 - Ananthula Akhil Kumar",
-    "R23XV1M6704 - Arudra Thrived Sai",
-    "R23XV1M6705 - Asmita Samayam",
-    "R23XV1M6706 - Bolladi Yashwanth Reddy",
-    "R23XV1M6707 - Chanda Pranav",
-    "R23XV1M6708 - Chiguru Varun",
-    "R23XV1M6709 - Duddu Harshavardhan",
-    "R23XV1M6710 - Gadde Yaksha",
-    "R23XV1M6711 - Gannavarapu Sai Jaiwanth",
-    "R23XV1M6712 - Gopagani Prabhas Aryan",
-    "R23XV1M6713 - Gorijavolu Ramphani Prasad",
-    "R23XV1M6714 - GVS Lalitha Siva Priya",
-    "R23XV1M6715 - Jerripotula Dharan Premjee",
-    "R23XV1M6716 - Kadiri Hitesh Reddy",
-    "R23XV1M6717 - Kandagaddala Lakshmi Venkateswarachaitanya",
-    "R23XV1M6718 - Kandagaddala Lakshmi Vyshnavi",
-    "R23XV1M6719 - Katta Yogith Reddy",
-    "R23XV1M6720 - Kotha Venkata Sourav Sohil",
-    "R23XV1M6721 - Krapa Harsha Vardhan",
-    "R23XV1M6722 - Kuntla Sri Sahithi",
-    "R23XV1M6723 - Lalithadithya Reddy Chintalapudi",
-    "R23XV1M6724 - Manaswini Koratagiri",
-    "R23XV1M6725 - Manikanti Gayatri Reddy",
-    "R23XV1M6726 - Maranani Dinesh Kumar",
-    "R23XV1M6727 - Mohammed Nahid Hasan",
-    "R23XV1M6728 - Mothe Venkatnath Reddy",
-    "R23XV1M6729 - Moturu Sai Gagana Laasya",
-    "R23XV1M6730 - Muppidi Saika Brinda",
-    "R23XV1M6731 - Pasumarthi Vaibhav",
-    "R23XV1M6732 - Rishika Cherupelly",
-    "R23XV1M6733 - Rohan Sreeharsha Srikakulam",
-    "R23XV1M6734 - Saathvik Varma Mandapati",
-    "R23XV1M6735 - Shaik Taufeeq Ahmad",
-    "R23XV1M6736 - Shrihari Bhide",
-    "R23XV1M6737 - Sonti Krishna Keerthana",
-    "R23XV1M6738 - Sowmya Adluri",
-    "R23XV1M6739 - Sresta Bhupathi",
-    "R23XV1M6740 - Supraja Ananthula",
-    "R23XV1M6741 - Kottam Chakradhar Reddy",
-    "R23XV1M6742 - Talabhattula Dheeraj Krishna",
-    "R23XV1M6743 - Tanmay Gunnam",
-    "R23XV1M6744 - Tata Sucheth",
-    "R23XV1M6745 - Tera Daiva Prem",
-    "R23XV1M6746 - Tumma Nikhil Kumar",
-    "R23XV1M6747 - V Arun Raj Goud",
-    "R23XV1M6748 - Valluri Vamshi Krishna Bharadwaj",
-    "R23XV1M6749 - Vuddanti Hima Varenya",
-    "R23XV1M6750 - Yamini Lokesh",
-    "NR23XV1M6751 - Sangeetam Abhishek Naidu",
-    "NR23XV1M6752 - Chopperla Sailakshmi Harini",
-    "NR23XV1M6753 - Surapureddy Rahul",
-    "NR23XV1M6754 - K Venkata Pallavi",
-    "NR23XV1M6755 - Bolisetty Subbarayudu",
-    "NR23XV1M6756 - Chunduru Sasank Vardhan",
-    "NR23XV1M6757 - Karra Lakshmi Abhinav Sivesh",
-    "NR23XV1M6758 - Sibani Tiwari",
-    "NR23XV1M6759 - Venumuddala Rishi",
-    "NR23XV1M6760 - Venkatesh Tadepalli"
-  ];
+ const students = [
+  "23XV1M6701-Addanki Harshitha",
+  "23XV1M6702-Agalduvity Rohit",
+  "23XV1M6703-Ananthula Akhil Kumar",
+  "23XV1M6704-Arudra Thrived Sai",
+  "23XV1M6705-Asmita Samayam",
+  "23XV1M6706-Bolladi Yashwanth Reddy",
+  "23XV1M6707-Chanda Pranav",
+  "23XV1M6708-Chiguru Varun",
+  "23XV1M6709-Duddu Harshavardhan",
+  "23XV1M6710-Gadde Yaksha",
+  "23XV1M6711-Gannavarapu Sai Jaiwanth",
+  "23XV1M6712-Gopagani Prabhas Aryan",
+  "23XV1M6713-Gorijavolu Ramphani Prasad",
+  "23XV1M6714-GVS Lalitha Siva Priya",
+  "23XV1M6715-Jerripotula Dharan Premjee",
+  "23XV1M6716-Kadiri Hitesh Reddy",
+  "23XV1M6717-Kandagaddala Lakshmi Venkateswarachaitanya",
+  "23XV1M6718-Kandagaddala Lakshmi Vyshnavi",
+  "23XV1M6719-Katta Yogith Reddy",
+  "23XV1M6720-Kotha Venkata Sourav Sohil",
+  "23XV1M6721-Krapa Harsha Vardhan",
+  "23XV1M6722-Kuntla Sri Sahithi",
+  "23XV1M6723-Lalithadithya Reddy Chintalapudi",
+  "23XV1M6724-Manaswini Koratagiri",
+  "23XV1M6725-Manikanti Gayatri Reddy",
+  "23XV1M6726-Maranani Dinesh Kumar",
+  "23XV1M6727-Mohammed Nahid Hasan",
+  "23XV1M6728-Mothe Venkatnath Reddy",
+  "23XV1M6729-Moturu Sai Gagana Laasya",
+  "23XV1M6730-Muppidi Saika Brinda",
+  "23XV1M6731-Pasumarthi Vaibhav",
+  "23XV1M6732-Rishika Cherupelly",
+  "23XV1M6733-Rohan Sreeharsha Srikakulam",
+  "23XV1M6734-Saathvik Varma Mandapati",
+  "23XV1M6735-Shaik Taufeeq Ahmad",
+  "23XV1M6736-Shrihari Bhide",
+  "23XV1M6737-Sonti Krishna Keerthana",
+  "23XV1M6738-Sowmya Adluri",
+  "23XV1M6739-Sresta Bhupathi",
+  "23XV1M6740-Supraja Ananthula",
+  "23XV1M6741-Kottam Chakradhar Reddy",
+  "23XV1M6742-Talabhattula Dheeraj Krishna",
+  "23XV1M6743-Tanmay Gunnam",
+  "23XV1M6744-Tata Sucheth",
+  "23XV1M6745-Tera Daiva Prem",
+  "23XV1M6746-Tumma Nikhil Kumar",
+  "23XV1M6747-V Arun Raj Goud",
+  "23XV1M6748-Valluri Vamshi Krishna Bharadwaj",
+  "23XV1M6749-Vuddanti Hima Varenya",
+  "23XV1M6750-Yamini Lokesh",
+  "23XV1M6751-Sangeetam Abhishek Naidu",
+  "23XV1M6752-Chopperla Sailakshmi Harini",
+  "23XV1M6753-Surapureddy Rahul",
+  "23XV1M6754-K Venkata Pallavi",
+  "23XV1M6755-Bolisetty Subbarayudu",
+  "23XV1M6756-Chunduru Sasank Vardhan",
+  "23XV1M6757-Karra Lakshmi Abhinav Sivesh",
+  "23XV1M6758-Sibani Tiwari",
+  "23XV1M6759-Venumuddala Rishi",
+  "23XV1M6760-Venkatesh Tadepalli"
+];
+
+
 
   // const subjectsByDay = {
   //   'Monday': ['AI', 'ADA', 'CN-Lab', 'SMD'],
@@ -397,18 +729,39 @@ const firebaseConfig = {
   //   'Saturday': ['Aptitude Class']
   // };
    const subjectsByDay = {
-    'Monday': ['AI', 'ADA', 'CN-Lab', 'SMD','IDA','ACS-Lab','CN','KOFKA','R-Lab','IPR'],
-    'Tuesday': ['AI', 'ADA', 'CN-Lab', 'SMD','IDA','ACS-Lab','CN','KOFKA','R-Lab','IPR'],
-    'Wednesday': ['AI', 'ADA', 'CN-Lab', 'SMD','IDA','ACS-Lab','CN','KOFKA','R-Lab','IPR'],
-    'Thursday': ['AI', 'ADA', 'CN-Lab', 'SMD','IDA','ACS-Lab','CN','KOFKA','R-Lab','IPR'],
-    'Friday': ['AI', 'ADA', 'CN-Lab', 'SMD','IDA','ACS-Lab','CN','KOFKA','R-Lab','IPR'],
-    'Saturday': ['AI', 'ADA', 'CN-Lab', 'SMD','IDA','ACS-Lab','CN','KOFKA','R-Lab','IPR']
-  };
+  'Monday': ['BDA', 'CNS', 'ES', 'RTP'],
+  'Tuesday': ['BDA Lab', 'CNS', 'ATCD',  'RTP'],
+  'Wednesday': ['ATCD', 'DT',  'ATCD ASSIGNMENT'],
+  'Thursday': ['ML Theory & Lab', 'AI',  'LIBRARY'],
+  'Friday': ['BDA', 'CNS', 'CNS Lab'],
+  'Saturday': ['P&T']
+};
+
+
+
+  
+const ALL_SUBJECTS = [
+  'BDA',
+  'CNS',
+  'ES',
+  'RTP',
+  'BDA Lab',
+  'ATCD',
+  'DT',
+  'ML Theory & Lab',
+  'AI',
+  'CNS Lab',
+  'LIBRARY',
+  'P&T',
+  'ASSIGNMENT',
+  'ATCD ASSIGNMENT'
+];
+
 
   /*************************************
    * DOM
    *************************************/
-  const $ = id => document.getElementById(id);
+ const $ = id => document.getElementById(id);
 
   const loginSection = $("login-section");
   const attendanceSection = $("attendance-section");
@@ -438,6 +791,8 @@ const firebaseConfig = {
   // QR session UI
   const qrSessionBox = $("qr-session-box");
   const subjectSelect = $("subject-select");
+  const viewerSubjectSelect = $("viewer-subject-select");
+
   const radiusInput = $("radius-input");
   const expireMinsInput = $("expire-mins");
   const setClassHereBtn = $("set-class-here");
@@ -476,6 +831,11 @@ const firebaseConfig = {
       updateStatusIndicator('error', '🔴 Live Updates Paused');
     }
   });
+  function getActiveSubjectSelect() {
+  return currentRole === 'viewer'
+    ? viewerSubjectSelect
+    : subjectSelect;   // ✅ correct variable
+}
 
   function updateStatusIndicator(status, text) {
     autoUpdateStatus.className = `auto-update-indicator ${status}`;
@@ -523,7 +883,8 @@ try {
               processedData[student] = attendance;
             } else {
               // Convert non-array data to array format
-              processedData[student] = new Array((newData.subjects || []).length).fill(false);
+              processedData[student] = new Array((newData.subjects || []).length).fill(true);
+
             }
           }
           updateTableWithChanges({...newData, data: processedData});
@@ -577,9 +938,22 @@ try {
       currentDocListener = null;
     }
   }
+function populateAllSubjectsDropdown() {
+  const select = document.getElementById('add-subject-select');
+  select.innerHTML = '';
+
+  ALL_SUBJECTS.forEach(sub => {
+    const opt = document.createElement('option');
+    opt.value = sub;
+    opt.textContent = sub;
+    select.appendChild(opt);
+  });
+}
 
 function updateTableWithChanges(newData) {
-  const subjectIndex = parseInt(subjectSelect.value, 10);
+  const activeSelect = getActiveSubjectSelect();
+const subjectIndex = parseInt(activeSelect.value, 10);
+
   const selectedSubject = (subjectsByDay[daySelect.value] || [])[subjectIndex];
   if (!selectedSubject) return;
 
@@ -614,10 +988,10 @@ function updateTableWithChanges(newData) {
     startAutoUpdate();
   });
   
-  dateSelect.addEventListener('change', () => { 
-    populateSubjectSelect(); 
-    startAutoUpdate();
-  });
+ dateSelect.addEventListener('change', () => {
+  autoSelectDayFromDate(dateSelect.value);
+});
+
 
   // Start auto-update when saved record is selected
   savedDates.addEventListener('change', () => {
@@ -703,14 +1077,27 @@ function updateTableWithChanges(newData) {
   }
 
   function showApp() {
+    
+
+    const viewerSubjectBlock = document.getElementById('viewer-subject-block');
+
+if (currentRole === 'viewer') {
+    viewerSubjectBlock.style.display = 'inline-flex';
+  } else {
+    viewerSubjectBlock.style.display = 'none';
+  }
+
     loginSection.classList.add('hidden');
     attendanceSection.classList.remove('hidden');
 
     populateDayDropdown();
-    dateSelect.value = new Date().toISOString().split('T')[0];
-    buildTable(subjectsByDay['Monday']);
+    const today = new Date().toISOString().split('T')[0];
+dateSelect.value = today;
+autoSelectDayFromDate(today);
+  daySelect.disabled = true;
     loadSavedDates();
     populateSubjectSelect();
+      populateAllSubjectsDropdown();
 
     if (currentRole === 'viewer') {
       addClassSection.style.display = 'none';
@@ -723,7 +1110,7 @@ function updateTableWithChanges(newData) {
     } else {
       addClassSection.style.display = '';
       teacherButtons.style.display = '';
-      daySelect.disabled = false;
+     
       dateSelect.disabled = false;
       qrSessionBox.style.display = '';
       toggleAutoUpdateBtn.style.display = '';
@@ -778,7 +1165,7 @@ function updateTableWithChanges(newData) {
   forgotBtn.addEventListener('click', async () => {
     const email = (document.getElementById('username').value || '').trim();
     if (!email) {
-      loginFeedback.innerHTML = `<div class="notice">Enter your email and click "Forgot password".</div>`;
+      loginFeedback.innerHTML = `<div class="notice">Enter your email and click "Forgot password".Check your Spam</div>`;
       return;
     }
     try {
@@ -813,9 +1200,35 @@ function updateTableWithChanges(newData) {
   /*************************************
    * Attendance table with Select All functionality
    *************************************/
-  addClassBtn.addEventListener('click', addClass);
+  document
+  .getElementById('add-subject-btn')
+  .addEventListener('click', addSelectedSubject);
+
   const removeClassBtn = document.getElementById('remove-class-btn');
 removeClassBtn.addEventListener('click', removeClass);
+function autoSelectDayFromDate(dateStr) {
+  if (!dateStr) return;
+
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
+
+  const dateObj = new Date(dateStr + "T00:00:00"); // avoid timezone issues
+  const dayName = days[dateObj.getDay()];
+
+  // Only set if day exists in timetable
+  if (subjectsByDay[dayName]) {
+    daySelect.value = dayName;
+    populateSubjectSelect();
+    startAutoUpdate();
+  }
+}
 
 function removeClass() {
   if (currentRole === 'viewer') return;
@@ -858,6 +1271,7 @@ function removeClass() {
   saveBtn2.addEventListener('click', saveAttendance);
   exportBtn2.addEventListener('click', exportCSV);
 
+
   function populateDayDropdown() {
     daySelect.innerHTML = '';
     Object.keys(subjectsByDay).forEach(day => {
@@ -867,17 +1281,31 @@ function removeClass() {
       daySelect.appendChild(option);
     });
   }
+  
 
   function populateSubjectSelect() {
-    subjectSelect.innerHTML = '';
-    const subjects = subjectsByDay[daySelect.value] || [];
-    subjects.forEach((s, i) => {
-      const opt = document.createElement('option');
-      opt.value = String(i); // store index
-      opt.textContent = s;
-      subjectSelect.appendChild(opt);
-    });
+    const subjectSelect = getActiveSubjectSelect();
+  subjectSelect.innerHTML = '';
+
+  const subjects = subjectsByDay[daySelect.value] || [];
+
+  // 1️⃣ Add options first
+  subjects.forEach((s, i) => {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = s;
+    subjectSelect.appendChild(opt);
+  });
+
+  // 2️⃣ Select first subject
+  if (subjectSelect.options.length > 0) {
+    subjectSelect.selectedIndex = 0;
   }
+
+  // 3️⃣ Now build table (subjectSelect.value is valid)
+  buildTable(subjects);
+}
+
 
 function buildTable(subjects, existingData = {}) {
   // Clear existing content
@@ -885,7 +1313,9 @@ function buildTable(subjects, existingData = {}) {
   tbody.innerHTML = '';
 
   // Get selected subject
-  const subjectIndex = parseInt(subjectSelect.value, 10);
+  const activeSelect = getActiveSubjectSelect();
+const subjectIndex = parseInt(activeSelect.value, 10);
+
   const subjectName = subjects[subjectIndex];
   if (!subjectName) return;
 
@@ -894,12 +1324,17 @@ function buildTable(subjects, existingData = {}) {
 headerHTML += `
   <th class="subject-header">
     ${subjectName}
-    <button class="select-all-btn" 
-            data-subject-index="${subjectIndex}" 
-            onclick="toggleSelectAll(${subjectIndex})">
-      Select All
-    </button>
+    ${
+      currentRole === 'teacher'
+        ? `<button class="select-all-btn"
+              data-subject-index="${subjectIndex}"
+              onclick="toggleSelectAll(${subjectIndex})">
+            Select All
+          </button>`
+        : ''
+    }
   </th>`;
+
 tableHeader.innerHTML = headerHTML;
 
 
@@ -908,13 +1343,14 @@ tableHeader.innerHTML = headerHTML;
     const row = document.createElement('tr');
     
     // Get attendance status for this specific subject
-    let isPresent = false;
-    if (existingData[student] && Array.isArray(existingData[student])) {
-      // Ensure the array has enough elements
-      if (subjectIndex < existingData[student].length) {
-        isPresent = existingData[student][subjectIndex];
-      }
-    }
+    let isPresent = true; // ✅ default PRESENT
+
+if (existingData[student] && Array.isArray(existingData[student])) {
+  if (subjectIndex < existingData[student].length) {
+    isPresent = existingData[student][subjectIndex];
+  }
+}
+
     
     const disabled = currentRole === 'viewer' ? 'disabled' : '';
     row.innerHTML = `
@@ -936,7 +1372,7 @@ tableHeader.innerHTML = headerHTML;
 
 
   // Global function for select all buttons (needs to be accessible from onclick)
- window.toggleSelectAll = function(subjectIndex) {
+  window.toggleSelectAll = function(subjectIndex) {
   const checkboxes = document.querySelectorAll(
     `#attendance-body input[type="checkbox"][data-subject-index="${subjectIndex}"]`
   );
@@ -950,7 +1386,6 @@ tableHeader.innerHTML = headerHTML;
 
   updateSelectAllButton(button, !allSelected);
 };
-
 
   function updateSelectAllButtons() {
     if (currentRole !== 'teacher') return;
@@ -980,8 +1415,35 @@ tableHeader.innerHTML = headerHTML;
       updateSelectAllButtons();
     }
   });
+  function onSubjectChange() {
+  const day = daySelect.value;
+  const date = dateSelect.value;
+  if (!day || !date) return;
+
+  const docId = `${day}_${date}`;
+
+  getDoc(doc(db, 'attendance', docId))
+    .then(docSnap => {
+      const subjects = subjectsByDay[day] || [];
+      if (docSnap.exists()) {
+        buildTable(subjects, docSnap.data().data || {});
+      } else {
+        buildTable(subjects, {});
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching attendance:', err);
+      const subjects = subjectsByDay[day] || [];
+      buildTable(subjects, {});
+    });
+}
+
+// ✅ Attach to BOTH selects
+subjectSelect.addEventListener('change', onSubjectChange);
+viewerSubjectSelect.addEventListener('change', onSubjectChange);
+
 // 1. Update the subjectSelect event listener to rebuild the table with current data
-subjectSelect.addEventListener('change', () => {
+getActiveSubjectSelect().addEventListener('change', () => {
   const day = daySelect.value;
   const date = dateSelect.value;
   if (!day || !date) return;
@@ -1027,6 +1489,7 @@ function processAttendanceData(data, subjects) {
   
   return processedData;
 }
+
 
 // 1. Modify the saveAttendance function to handle multiple subjects properly
 // 1. Modify the saveAttendance function to match the desired structure
@@ -1078,7 +1541,8 @@ async function saveAttendance() {
     
     // Initialize student data if it doesn't exist
     if (!existingData[student]) {
-      existingData[student] = new Array(allSubjects.length).fill(false);
+      existingData[student] = new Array(allSubjects.length).fill(true);
+
     }
     
     // Ensure the array has the correct length
@@ -1145,61 +1609,134 @@ async function saveAttendance() {
     alert('Failed to load saved records (check Firestore rules).');
   }
 }
+function addSelectedSubject() {
+  if (currentRole === 'viewer') return;
+
+  const day = daySelect.value;
+  const subject = document.getElementById('add-subject-select').value;
+
+  if (!subject) {
+    alert('Please select a subject');
+    return;
+  }
+
+  const subjects = subjectsByDay[day];
+
+  if (subjects.includes(subject)) {
+    alert(`"${subject}" already exists for ${day}`);
+    return;
+  }
+
+  // Preserve existing attendance
+  const existingData = {};
+  document.querySelectorAll('#attendance-body tr').forEach(row => {
+    const student = row.cells[0].textContent;
+    existingData[student] = [];
+    for (let i = 1; i < row.cells.length; i++) {
+      existingData[student].push(row.cells[i].firstChild.checked);
+    }
+  });
+
+  subjects.push(subject);
+  buildTable(subjects, existingData);
+  populateSubjectSelect();
+}
 
 
-  function addClass() {
-    if (currentRole === 'viewer') return;
-    const input = document.getElementById('new-class-name');
-    const newClass = (input.value || '').trim();
-    if (!newClass) { alert('Please enter a class name'); return; }
+  // function addClass() {
+  //   if (currentRole === 'viewer') return;
+  //   const input = document.getElementById('new-class-name');
+  //   const newClass = (input.value || '').trim();
+  //   if (!newClass) { alert('Please enter a class name'); return; }
 
-    const day = daySelect.value;
-    const subjects = subjectsByDay[day];
-    if (subjects.includes(newClass)) { alert('This class already exists for today.'); return; }
+  //   const day = daySelect.value;
+  //   const subjects = subjectsByDay[day];
+  //   if (subjects.includes(newClass)) { alert('This class already exists for today.'); return; }
 
-    const existingData = {};
-    document.querySelectorAll('#attendance-body tr').forEach(row => {
-      const student = row.cells[0].textContent;
-      existingData[student] = [];
-      for (let i = 1; i < row.cells.length; i++) {
-        existingData[student].push(row.cells[i].firstChild.checked);
-      }
+  //   const existingData = {};
+  //   document.querySelectorAll('#attendance-body tr').forEach(row => {
+  //     const student = row.cells[0].textContent;
+  //     existingData[student] = [];
+  //     for (let i = 1; i < row.cells.length; i++) {
+  //       existingData[student].push(row.cells[i].firstChild.checked);
+  //     }
+  //   });
+
+  //   subjects.push(newClass);
+  //   buildTable(subjects, existingData);
+  //   input.value = '';
+  //   populateSubjectSelect();
+  // }
+
+async function exportCSV() {
+  if (currentRole !== 'teacher') {
+    alert('Only teachers can export.');
+    return;
+  }
+
+  const day = daySelect.value;
+  const date = dateSelect.value;
+  if (!day || !date) {
+    alert('Please select day and date');
+    return;
+  }
+
+  const docId = `${day}_${date}`;
+
+  // ✅ Selected subject
+  const subjectIndex = parseInt(subjectSelect.value, 10);
+  const subjects = subjectsByDay[day] || [];
+  const subjectName = subjects[subjectIndex];
+
+  if (!subjectName) {
+    alert('Please select a subject');
+    return;
+  }
+
+  try {
+    const docSnap = await getDoc(doc(db, 'attendance', docId));
+    if (!docSnap.exists()) {
+      alert('No attendance data found');
+      return;
+    }
+
+    const saved = docSnap.data();
+    const data = saved.data || {};
+
+    // ✅ CSV content
+    let csvContent = `Date,${date}\nDay,${day}\n`;
+    csvContent += `Student,${subjectName}\n`;
+
+    Object.keys(data).forEach(student => {
+      const arr = data[student] || [];
+      const status = arr[subjectIndex] ? 'Present' : 'Absent';
+      csvContent += `${student},${status}\n`;
     });
 
-    subjects.push(newClass);
-    buildTable(subjects, existingData);
-    input.value = '';
-    populateSubjectSelect();
-  }
+    // ✅ Safe filename (remove spaces & special chars)
+    const safeSubject = subjectName.replace(/[^a-zA-Z0-9]/g, '_');
 
-  async function exportCSV() {
-    if (currentRole !== 'teacher') { alert('Only teachers can export.'); return; }
-    const day = daySelect.value;
-    const date = dateSelect.value;
-    const docId = `${day}_${date}`;
-    try {
-      const docSnap = await getDoc(doc(db, 'attendance', docId));
-      if (!docSnap.exists()) { alert('No data found for this date'); return; }
-      const saved = docSnap.data();
-      let csvContent = `Date,${date},Day,${day}\n`;
-      csvContent += 'Student,' + (saved.subjects || []).join(',') + '\n';
-      Object.keys(saved.data || {}).forEach(student => {
-        csvContent += student + ',' + (saved.data[student] || []).map(p => p ? 'Present' : 'Absent').join(',') + '\n';
-      });
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `Attendance_${day}_${date}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      console.error(e);
-      alert('Failed to export (check Firestore rules).');
-    }
+    const fileName = `Attendance_${safeSubject}_${day}_${date}.csv`;
+
+    // ✅ Download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error(e);
+    alert('Failed to export CSV');
   }
+}
+
+
 
   /*************************************
    * QR + Geolocation session (teacher)
@@ -1508,7 +2045,7 @@ async function saveAttendance() {
 
     // Ensure subjects array is from timetable
     const subjects = subjectsByDay[day] || [];
-    const blankRow = subjects.map(() => false);
+    const blankRow = subjects.map(() => true);
 
     let data = {};
     if (attSnap.exists()) {
