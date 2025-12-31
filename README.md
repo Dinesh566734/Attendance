@@ -3,7 +3,7 @@
 A simple and effective **attendance management system** built with web technologies to help faculty and students manage attendance seamlessly for college classes.
 
 ## Download the app
-https://webdevcrrao-del.github.io/College-Attendance/mobileapp.html
+https://attendancepage.onrender.com/mobileapp.html
 
 ## 🚀 Features
 
